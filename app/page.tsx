@@ -82,7 +82,7 @@ export default function Home() {
       <nav className="system-switcher" aria-label="Select case">
         {systems.map((system,index)=><button key={system.id} className={active===index?'active':''} onClick={()=>setActive(index)} aria-pressed={active===index}><i /><span>{system.id}</span><strong>{system.label}</strong><small>{system.status}</small></button>)}
       </nav>
-      <footer><span>SAMUEL LOY FAULKNER</span><span>BUSINESS INTELLIGENCE · DATA ENGINEERING · GOVERNED AI</span><a href="https://linkedin.com/in/samuel-faulkner-739698166">LINKEDIN ↗</a></footer>
+      <footer><span>SAMUEL LOY FAULKNER</span><span>BUSINESS INTELLIGENCE · DATA ENGINEERING · GOVERNED AI</span><a href="/links">DIGITAL CARD ↗</a><a href="https://linkedin.com/in/samuel-faulkner-739698166">LINKEDIN ↗</a></footer>
     </main>
   );
 }
