@@ -1,31 +1,3 @@
-import Link from 'next/link';
 
-const links = [
-  { label: 'Portfolio', note: 'Selected work and experience', href: '/' },
-  { label: 'LinkedIn', note: 'Professional profile', href: 'https://linkedin.com/in/samuel-faulkner-739698166' },
-  { label: 'Email me', note: 'samfaulkner681@gmail.com', href: 'mailto:samfaulkner681@gmail.com' },
-  { label: 'Download CV', note: 'Resume and qualifications', href: '/resume.pdf' },
-];
-
-export default function LinksPage() {
-  return (
-    <main className="card-page">
-      <div className="card-glow" aria-hidden="true" />
-      <section className="digital-card" aria-labelledby="card-title">
-        <Link className="card-back" href="/">← Portfolio</Link>
-        <div className="card-mark" aria-hidden="true">SF</div>
-        <p className="card-kicker">BUSINESS INTELLIGENCE · DATA ANALYTICS</p>
-        <h1 id="card-title">Samuel Faulkner</h1>
-        <p className="card-intro">I build trustworthy data systems that turn complex operations into clear decisions.</p>
-        <div className="card-links">
-          {links.map((link) => (
-            <a key={link.label} href={link.href} className="card-link" target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noreferrer' : undefined}>
-              <span>{link.label}</span><small>{link.note}</small><b aria-hidden="true">↗</b>
-            </a>
-          ))}
-        </div>
-        <p className="card-footer">SHANNON HILLS, ARKANSAS <span>·</span> AVAILABLE FOR CONVERSATION</p>
-      </section>
-    </main>
-  );
-}
+const links=[{label:'Explore my portfolio',note:'Career, skills and selected projects',href:'/'},{label:'LinkedIn',note:'Professional profile',href:'https://linkedin.com/in/samuel-faulkner-739698166'},{label:'Email Samuel',note:'Start a conversation',href:'mailto:samfaulkner681@gmail.com'},{label:'Career timeline',note:'Experience from operations to analytics',href:'/#experience'}];
+export default function LinksPage(){return <main className="card-page"><section className="digital-card"><a className="card-back" href={(process.env.NEXT_PUBLIC_BASE_PATH || '')+'/'}>← Portfolio</a><div className="card-mark" aria-hidden="true">SF</div><p className="card-kicker">BUSINESS INTELLIGENCE · DATA ANALYTICS</p><h1>Samuel Faulkner</h1><p className="card-intro">From operational experience to trusted data and clearer decisions.</p><div className="card-links">{links.map(l=><a className="card-link" key={l.label} href={l.href.startsWith('/')?(process.env.NEXT_PUBLIC_BASE_PATH || '')+l.href:l.href}><span>{l.label}</span><small>{l.note}</small><b aria-hidden="true">↗</b></a>)}</div><p className="card-footer">ARKANSAS · LET’S CONNECT</p></section></main>;}

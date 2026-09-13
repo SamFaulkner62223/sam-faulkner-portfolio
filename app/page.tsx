@@ -1,88 +1,41 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { ArrowUpRight, ArrowDown, Layers, Database, BrainCircuit, Workflow, X, Menu, Pause, Play } from 'lucide-react';
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogTrigger, DialogClose } from '@/components/ui/dialog';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
-const systems = [
-  { id:'CV-01', label:'CURRENT ROLE', title:'Data Analyst · Arkansas Department of Agriculture', health:97, status:'ACTIVE', problem:'Enterprise programs need dependable reporting, shared definitions, and clearer paths from operational data to leadership decisions.', process:'Requirements → SQL and Python workflows → metadata and governance → Power BI reporting.', result:'Supporting enterprise reporting, data quality, workflow automation, modernization, and responsible AI adoption.' },
-  { id:'CV-02', label:'BI EXPERIENCE', title:'Operational analytics across complex organizations', health:94, status:'VERIFIED', problem:'Rental, sales, logistics, and inventory teams need usable measures across fragmented operational systems.', process:'Business analysis → data extraction → semantic models → dashboards and executive reporting.', result:'Experience spanning Riggs Rents, WESCO International, Northwest Center, and Mighty AI.' },
-  { id:'CV-03', label:'AI + DATA BUILD', title:'Governed AI and analytics systems', health:92, status:'VALIDATED', problem:'AI prototypes need trustworthy data, explicit limits, traceable evidence, and independent testing.', process:'Validate data → constrain claims → test interfaces → preserve evidence and decision lineage.', result:'Built healthcare analytics, MIRA governance, and independently tested AI-assisted web prototypes.' },
+import { ProjectEvidence } from './project-evidence';
+
+const career = [
+ ['Mar 2026–Present','Arkansas Department of Agriculture','Data Analyst','Enterprise reporting, SQL and Python workflows, metadata, data stewardship and business process analysis.'],
+ ['May 2024–Feb 2026','Riggs CAT / Riggs Rents','Business Analyst','Executive Power BI dashboards, fleet utilization, rental performance, transportation costs and reporting automation.'],
+ ['Apr 2023–Mar 2024','WESCO International','Sales Operations Analyst','Sales pipeline and territory reporting, SQL extraction and decision support for regional leadership.'],
+ ['Oct 2021–Mar 2023','Northwest Center','Data Coordinator','Operational data, inventory reporting, SQL and data quality improvements.'],
+ ['2018–2019','Mighty AI','Quality Assurance Analyst','AI training data validation, annotation standards and dataset quality review.'],
+ ['2006–2016','Loy Trucking LLC','Owner / Operations Manager','Fleet operations, scheduling, customer relationships, compliance and budgeting.'],
 ];
-
-const code = [
-  { kind:'header', text:'CAREER / CURRENT ROLE' },
-  { kind:'code', text:'role = DataAnalyst(state_government)' },
-  { kind:'code', text:'deliver(SQL, Python, PowerBI)' },
-  { kind:'code', text:'govern(metadata, quality, access)' },
-  { kind:'code', text:'translate(operations -> decisions)' },
-  { kind:'header', text:'EXPERIENCE / BUSINESS INTELLIGENCE' },
-  { kind:'code', text:'analyze(rental, sales, logistics)' },
-  { kind:'code', text:'model(KPI, utilization, lifecycle)' },
-  { kind:'code', text:'automate(reporting_workflows)' },
-  { kind:'code', text:'communicate(findings, leadership)' },
-  { kind:'header', text:'BUILD / AI + DATA SYSTEMS' },
-  { kind:'code', text:'validate(data_before_ai)' },
-  { kind:'code', text:'enforce(evidence, guardrails)' },
-  { kind:'code', text:'test(interface, state, lifecycle)' },
-  { kind:'code', text:'publish(public_safe_claims)' },
+const projects = [
+ {title:'SQL Server Ingestion Framework',category:'BI & Data',icon:Database,tags:['SQL','Python','ETL','Data Governance'],subtitle:'From changing source files to governed warehouse tables.',overview:'A configuration-driven ingestion framework that profiles tabular sources, standardizes data, validates business keys and supports controlled SQL Server table provisioning and loading. This public-safe story separates the reusable design from private workplace implementations.',approach:['Profile the source and review mappings, types and business keys in a configuration contract.','Run read-only preflight and inspect existing database structures before approving schema provisioning.','Load approved records, retain target metadata and monitor the job; check repeat loads for duplicates.'],evidence:['Documented SQL Server pilot with controlled schema onboarding.','Initial and same-source repeat-load checks recorded.','Public-safe architecture excludes employer infrastructure, credentials and source records.'],flow:['Profile','Validate','Load']},
+ {title:'MIRA — Model-Agnostic AI Workspace',category:'AI Systems',icon:Workflow,tags:['Python','Data Governance','Systems Architecture'],subtitle:'Multiple AI helpers. Governed context. Human control.',overview:'A model-agnostic workspace designed to connect compatible AI helpers to governed project context through an MCP interface, with a human-facing control center. I directed architecture and governance with AI-assisted implementation. A separate bounded execution pilot demonstrated approval, a fixed Python task and result verification.',approach:['Define a fixed capability and an approved execution manifest.','Require human approval and a separate Run action.','Verify the result against the approved manifest and retained receipt, then persist completion.'],evidence:['One fixed Hello World pilot completed on September 6, 2026.','Result verification and durable completion documented.','Local prototype only; not unattended production orchestration.'],flow:['Approve','Run','Verify']},
+ {title:'Healthcare AI Analytics',category:'AI Systems',icon:BrainCircuit,tags:['Python','SQL','Streamlit','Data Governance'],subtitle:'Governed questions. Traceable answers.',overview:'A graduate healthcare analytics prototype that distinguishes supported questions from unsupported requests and answers from validated project assets.',approach:['Validate intake data and enrichment joins.','Explore facility volume, length of stay, payer mix and DRG patterns.','Connect governed Q&A with visual analytics and report workflows.'],evidence:['Governed Q&A workflow','Data validation and join assessment','Visual analytics and reporting'],flow:['Validate','Analyze','Explain']},
+ {title:'NovaStream Model Validation',category:'Machine Learning',icon:Workflow,tags:['Python','scikit-learn','Predictive Modeling'],subtitle:'Comparing models. Testing assumptions.',overview:'A proof-of-concept case study comparing classification approaches in a premium-upgrade scenario. This exploration informed the approach to Healthcare AI Analytics; it is not a standalone application or a healthcare model validation.',approach:['Check data quality and compare baseline groups.','Compare Logistic Regression, Decision Tree, Random Forest and Gradient Boosting.','Review feature importance and produce upgrade-probability scores.'],evidence:['Model comparison workflow','Feature-importance reporting','Decision-support scoring'],flow:['Prepare','Compare','Score']},
+ {title:'Professional Portfolio Platform',category:'AI Systems',icon:Layers,tags:['Python','Streamlit','Data Governance'],subtitle:'A connected memory for professional work.',overview:'A version-controlled knowledge system connecting career claims, project evidence, reusable documentation and AI handoffs.',approach:['Organize capabilities, projects and evidence.','Maintain curated JSON memory and project context summaries.','Prepare résumé and case-study material with human review.'],evidence:['Structured project knowledge','Reusable professional artifacts','AI handoff and archive workflows'],flow:['Collect','Connect','Reuse']},
+ {title:'Data Management',category:'BI & Data',icon:Database,tags:['SQL','Python','ETL'],subtitle:'Reliable foundations for analytical work.',overview:'A graduate data management project connecting company reference and market data with a structured SQL Server warehouse.',approach:['Normalize reference and time-series data with Python.','Load SQL Server staging, dimensions and facts.','Apply constraints and repeatable load scripts.'],evidence:['Dimensional data model','Python normalization scripts','SQL staging and load design'],flow:['Extract','Model','Load']},
 ];
+const skills=['SQL','Python','Power BI','ETL','Data Governance','Predictive Modeling','SharePoint','Power Automate'];
 
-export default function Home() {
-  const [active,setActive] = useState(0);
-  const [clock,setClock] = useState('00:00:00');
-  const item = systems[active];
-  useEffect(() => {
-    const tick=()=>setClock(new Date().toLocaleTimeString('en-US',{hour12:false}));
-    tick(); const timer=window.setInterval(tick,1000); return()=>window.clearInterval(timer);
-  },[]);
-  return (
-    <main className="soc">
-      <header>
-        <div className="brand"><b>SF</b><span>CV / EXPERIENCE MATRIX</span></div>
-        <div className="global-state"><i /> PROFILE ONLINE</div>
-        <time>{clock} / LOCAL</time>
-      </header>
-      <aside className="code-feed" aria-label="Decorative pseudocode feed">
-        <div className="panel-title"><span>01</span> EXECUTION STREAM <b>LIVE</b></div>
-        <div className="code-window">
-          <div className="code-scroll">{[...code,...code,...code].map((line,i)=><p className={line.kind} key={i}><em>{String(i+1).padStart(2,'0')}</em><code>{line.text}</code></p>)}</div>
-        </div>
-        <div className="hex-grid" aria-hidden="true">{['A4','19','F2','8B','D0','77','3E','C1','09','EE','41','6A'].map((h,i)=><span key={i}>{h}</span>)}</div>
-      </aside>
-      <section className="network">
-        <div className="panel-title"><span>02</span> CAREER TOPOLOGY <b>ACTIVE</b></div>
-        <svg viewBox="0 0 720 500" role="img" aria-label="Animated systems network connecting evidence to decisions">
-          <defs><filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-          <g className="circuit-lines"><path d="M38 90H180V180H330V95H502V170H684"/><path d="M38 410H145V310H274V388H447V288H684"/><path d="M180 180V310M330 95V388M502 170V288"/><path d="M274 310H502"/></g>
-          <g className="packets"><circle cx="38" cy="90" r="4"><animateMotion dur="4s" repeatCount="indefinite" path="M0 0H142V90H292V5H464V80H646"/></circle><circle cx="38" cy="410" r="4"><animateMotion dur="5s" repeatCount="indefinite" path="M0 0H107V-100H236V-22H409V-122H646"/></circle></g>
-          {[
-            ['ROLE',0,38,90],['DELIVER',0,180,180],['ANALYZE',1,330,95],
-            ['MODEL',1,330,388],['BUILD',2,502,170],['GOVERN',2,502,288],
-          ].map(([label,index,x,y]) => (
-            <foreignObject key={String(label)} x={Number(x)-32} y={Number(y)-32} width="64" height="64" className="svg-node-wrap">
-              <button type="button" className={`svg-node ${active===index?'active':''}`} onClick={()=>setActive(Number(index))} aria-label={`Open ${systems[Number(index)].label} through ${label} node`}>{label}</button>
-            </foreignObject>
-          ))}
-        </svg>
-        <div className="telemetry">
-          <div><span>CAREER ARC</span><b>15+</b><small>YEARS EXPERIENCE</small></div>
-          <div><span>PRIMARY STACK</span><b>BI+AI</b><small>DATA SYSTEMS</small></div>
-          <div><span>EVIDENCE</span><b>PPP</b><small>PUBLIC-SAFE</small></div>
-        </div>
-      </section>
-      <section className="case-view">
-        <div className="panel-title"><span>03</span> ACTIVE CASE <b>{item.id}</b></div>
-        <div className="case-heading"><div><small>{item.label}</small><h1>{item.title}</h1></div><div className="health"><b>{item.health}</b><span>HEALTH</span></div></div>
-        <dl>
-          <div><dt>FAULT</dt><dd>{item.problem}</dd></div>
-          <div><dt>LOGIC</dt><dd>{item.process}</dd></div>
-          <div><dt>OUTPUT</dt><dd>{item.result}</dd></div>
-        </dl>
-        <button className="open-case">VIEW EXPERIENCE <span>[ ENTER ]</span></button>
-      </section>
-      <nav className="system-switcher" aria-label="Select case">
-        {systems.map((system,index)=><button key={system.id} className={active===index?'active':''} onClick={()=>setActive(index)} aria-pressed={active===index}><i /><span>{system.id}</span><strong>{system.label}</strong><small>{system.status}</small></button>)}
-      </nav>
-      <footer><span>SAMUEL LOY FAULKNER</span><span>BUSINESS INTELLIGENCE · DATA ENGINEERING · GOVERNED AI</span><a href="/links">DIGITAL CARD ↗</a><a href="https://linkedin.com/in/samuel-faulkner-739698166">LINKEDIN ↗</a></footer>
-    </main>
-  );
+export default function Home(){
+ const [filter,setFilter]=useState('All'); const [skill,setSkill]=useState(''); const [motion,setMotion]=useState(true); const [menu,setMenu]=useState(false);
+ const shown=projects.filter(p=>(filter==='All'||p.category===filter)&&(!skill||p.tags.includes(skill)));
+ return <main className={motion?'portfolio':'portfolio motion-off'}>
+ <a href="#work" className="skip">Skip to projects</a>
+ <header className="site-header"><a className="wordmark" href="#"><span>SF</span> Samuel Faulkner</a><button className="menu-toggle" aria-label="Toggle navigation" aria-expanded={menu} onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button><nav className={menu?'nav open':'nav'} aria-label="Main navigation">{[['Experience','#experience'],['Projects','#work'],['Skills','#skills'],['Contact','#contact']].map(([name,url])=><a key={name} href={url} onClick={()=>setMenu(false)}>{name}</a>)}<button className="motion-control" onClick={()=>setMotion(!motion)} aria-label={motion?'Pause decorative motion':'Enable decorative motion'}>{motion?<Pause size={16}/>:<Play size={16}/>}<span>Motion {motion?'on':'off'}</span></button></nav></header>
+ <section className="hero"><div className="hero-art"/><div className="hero-content"><p className="eyebrow">ANALYZE / BUILD / CONNECT / IMPROVE</p><h1>Samuel<br/><em>Faulkner.</em></h1><p className="profession">Data Analyst · Business Intelligence · Data Engineering</p><p className="hero-statement">From operational experience to trusted data and clearer decisions.</p><div className="hero-actions"><a className="button primary" href="#work">Explore my work <ArrowDown size={18}/></a><a className="button secondary" href="#contact">Get in touch <ArrowUpRight size={18}/></a></div></div><span className="hero-caption">PEOPLE. DATA.<br/>POSSIBILITIES.</span><span className="hero-index">01 — A PROFESSIONAL JOURNEY</span></section>
+ <section className="current-strip"><div><span className="eyebrow">CURRENT ROLE</span><h2>Arkansas Department of Agriculture</h2><p>Data Analyst <span> / </span> Mar 2026–Present</p></div><p className="strip-quote">“Build systems that improve<br/>decision-making through trustworthy data.”</p><div><span className="eyebrow">IN PARALLEL</span><h2>Faulkner Analytics LLC</h2><p>Founder / Principal Consultant · Founded Jan 2026</p></div></section>
+ <div className="content-grid"><section id="experience" className="experience"><p className="eyebrow">02 / EXPERIENCE</p><h2 className="section-title">The path<br/>to here.</h2><p className="section-intro">Operations experience. Analytical thinking. Practical systems.</p><div className="timeline">{career.map(([date,company,role,description],i)=><details key={company} open={i===0?true:undefined}><summary><span className="timeline-date">{date}</span><h3>{company}</h3><span>{role}</span><small>Explore role +</small></summary><p>{description}</p></details>)}</div><p className="source-note">Northwest Center dates reflect the data-coordinator period in the résumé; the wider employment history is under review.</p></section>
+ <section id="work" className="work"><div className="section-heading"><div><p className="eyebrow">03 / SELECTED WORK</p><h2 className="section-title">Ideas into<br/><em>working systems.</em></h2></div><span className="collection-count">0{projects.length} WORK SAMPLES</span></div><p className="section-intro">Applications and validation case studies: explore the problem, the approach and the evidence.</p><div className="filters" aria-label="Project category">{['All','BI & Data','AI Systems','Machine Learning'].map(f=><button key={f} aria-pressed={filter===f} className={filter===f?'selected':''} onClick={()=>setFilter(f)}>{f}</button>)}</div>{skill&&<div className="skill-filter">Skill: {skill}<button onClick={()=>setSkill('')}>Clear <X size={14}/></button></div>}<p className="result-count" aria-live="polite">{shown.length} {shown.length===1?'project':'projects'}{skill?` matching ${skill}`:''}</p><div className="project-grid">{shown.map((p)=><Dialog key={p.title}><DialogTrigger className="project-card"><div className={'project-art art-'+projects.indexOf(p)}><p.icon size={60} strokeWidth={1}/><span>{p.category}</span></div><div className="project-copy"><h3>{p.title}</h3><ArrowUpRight size={22}/><p>{p.subtitle}</p><span>{p.tags.slice(0,3).join(' · ')}</span></div></DialogTrigger><DialogContent className="project-dialog" showCloseButton={false}><DialogClose className="close-dialog" aria-label="Close project"><X/></DialogClose><div className="dialog-hero"><p className="eyebrow">SELECTED WORK / {p.category}</p><DialogTitle className="dialog-title">{p.title}</DialogTitle><div className="tag-row">{p.tags.map(t=><span key={t}>{t}</span>)}</div></div><div className="dialog-body"><DialogDescription className="project-description">{p.subtitle}</DialogDescription><Tabs defaultValue="overview" className="project-tabs"><TabsList aria-label="Project details"><TabsTrigger value="overview">Overview</TabsTrigger><TabsTrigger value="approach">Approach</TabsTrigger><TabsTrigger value="evidence">Evidence</TabsTrigger></TabsList><TabsContent value="overview"><h3>The project</h3><p>{p.overview}</p><div className="flow">{p.flow.map((s,i)=><div key={s}><span>0{i+1}</span><strong>{s}</strong></div>)}</div></TabsContent><TabsContent value="approach"><h3>How it comes together</h3><ol>{p.approach.map(s=><li key={s}>{s}</li>)}</ol></TabsContent><TabsContent value="evidence"><h3>Work behind the project</h3><p>These areas are documented in my portfolio source material.</p><ul>{p.evidence.map(s=><li key={s}>{s}</li>)}</ul><ProjectEvidence title={p.title} overview={p.overview} approach={p.approach} evidence={p.evidence}/></TabsContent></Tabs></div></DialogContent></Dialog>)}</div>{shown.length===0&&<div className="empty"><h3>Professional experience, beyond these projects.</h3><p>{skill} is part of my career skill set. These selected projects do not yet include a tagged example.</p><button className="button secondary" onClick={()=>{setSkill('');setFilter('All');}}>Show all projects</button></div>}</section>
+ <aside id="skills" className="skills"><p className="eyebrow">04 / TOOLKIT</p><h2 className="section-title">Skills with<br/>substance.</h2><p className="section-intro">Select a skill to explore related projects.</p><div className="skill-chips">{skills.map(s=><button key={s} aria-pressed={skill===s} className={skill===s?'selected':''} onClick={()=>{setSkill(skill===s?'':s);setFilter('All');document.getElementById('work')?.scrollIntoView({behavior:motion?'smooth':'auto',block:'start'});}}>{s}</button>)}</div><div className="education"><p className="eyebrow">EDUCATION</p><h3>University of Arkansas</h3><p>Master of Applied Business Analytics</p><small>Expected May 2027</small><h3>Bellevue College</h3><p>BS Computer Science</p><small>2023</small><p>Associate of Arts and Sciences</p><small>2019</small></div><div className="philosophy"><Layers size={28}/><p>Clear thinking.<br/>Connected systems.<br/><em>Useful outcomes.</em></p></div></aside></div>
+ <section id="contact" className="contact"><div><p className="eyebrow">LET’S CONNECT</p><h2>Good work starts<br/>with a conversation.</h2></div><div className="contact-actions"><a className="button primary" href="mailto:samfaulkner681@gmail.com">Email Samuel <ArrowUpRight size={18}/></a><a className="button secondary" href="https://linkedin.com/in/samuel-faulkner-739698166" target="_blank" rel="noreferrer">LinkedIn <ArrowUpRight size={18}/></a><a href={(process.env.NEXT_PUBLIC_BASE_PATH || '')+'/links/'}>Open my digital card →</a></div></section><footer className="site-footer"><span>Samuel Faulkner · Arkansas</span><span>Business intelligence / Data / Responsible AI</span><a href="#">Back to top ↑</a></footer>
+ </main>;
 }
